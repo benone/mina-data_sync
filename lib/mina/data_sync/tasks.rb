@@ -20,7 +20,7 @@ namespace :data_sync do
       if dump_data == 'true'
         queue "echo '-----> Copying backup'"
         queue "mkdir -p #{local_backup_path}"
-        queue "rsync --progress -e 'ssh -p #{port}' #{user}@#{domain}:#{deploy_to}/#{current_path}/#{remote_backup_path}/#{backup_file} #{local_backup_path}/#{backup_file}"
+        queue "rsync -z --progress -e 'ssh -p #{port}' #{user}@#{domain}:#{deploy_to}/#{current_path}/#{remote_backup_path}/#{backup_file} #{local_backup_path}/#{backup_file}"
       end
       if restore_data == 'true'
         queue "echo '-----> Restoring database'"
@@ -43,7 +43,7 @@ namespace :data_sync do
         queue %(data_sync "dump" "#{local_backup_path}/#{backup_file}" "$CONFIG")
         queue %(eval $(data_sync "dump" "#{local_backup_path}/#{backup_file}" "$CONFIG"))
         queue "echo '-----> Copying backup'"
-        queue "rsync --progress -e 'ssh -p #{port}' #{local_backup_path}/#{backup_file} #{user}@#{domain}:#{deploy_to}/#{current_path}/#{remote_backup_path}/#{backup_file}"
+        queue "rsync -z --progress -e 'ssh -p #{port}' #{local_backup_path}/#{backup_file} #{user}@#{domain}:#{deploy_to}/#{current_path}/#{remote_backup_path}/#{backup_file}"
       end
     end
 
